@@ -10,6 +10,8 @@ var bet = 0
 // Argent total joueur
 var moneyWin = 100 // Par défaut le joueur à 100$
 
+var checke = 0
+
 // Fonction d'auto création
 function build() {
     // Création bootstrap //
@@ -24,6 +26,7 @@ function build() {
     const colmd3 = document.createElement('div')
     const colmd4 = document.createElement('div')
     const colmd_12 = document.createElement('div')
+    const colmd_12_2 = document.createElement('div')
 
     app.setAttribute('id', 'app')
     container.setAttribute('class', 'container')
@@ -33,8 +36,11 @@ function build() {
     colmd3.setAttribute('class', 'col-md-3 py-5')
     colmd4.setAttribute('class', 'col-md-3 py-5')
     colmd_12.setAttribute('id', 'result')
+    colmd_12_2.setAttribute('id', 'wait')
     colmd_12.setAttribute('class', 'col-md-12 py-5')
+    colmd_12_2.setAttribute('class', 'col-md-12 py-5')
     colmd_12.innerHTML = ''
+    colmd_12_2.innerHTML = ''
 
 
     doc.appendChild(app)
@@ -45,6 +51,7 @@ function build() {
     row.appendChild(colmd3)
     row.appendChild(colmd4)
     row.appendChild(colmd_12)
+    row.appendChild(colmd_12_2)
 
 
     // Création Input, et Selecteur //
@@ -111,10 +118,10 @@ function build() {
 function startGame() {
     const playerSelect = document.getElementById('pfc')
     const colmd_12 = document.getElementById('result')
+    const colmd_12_2 = document.getElementById('wait')
     const inputBet = document.getElementById('bet')
     const inputMoney = document.getElementById('moneytotal')
     const inputWinrate = document.getElementById('winrate')
-
 
     var rdmNum = randomNumber(1, 3);
     bet = inputBet.value
@@ -125,65 +132,72 @@ function startGame() {
         if (bet <= 0) {
             colmd_12.innerHTML = 'Vous devez saisir un montant a parié !'
         } else {
+            // Si l'user a déjà jouer, il dois attendre la fin du timer ( 2s )
+            if (checke >= 1) {
+                colmd_12_2.innerHTML = `Tu dois attendre encore !`
+            } else {
+                let bot;
+                let egal = 'Personne ne gagne dommage :('
+                let win = 'Bien joué a toi tu gagne !'
+                let loose = 'Quel dommage, tu perds :('
+                // Ajout d'une partie afin de faire le winrate
+                gamePlay++
+                checke+=1
 
-            let bot;
-            let egal = 'Personne ne gagne dommage :('
-            let win = 'Bien joué a toi tu gagne !'
-            let loose = 'Quel dommage, tu perds :('
-            // Ajout d'une partie afin de faire le winrate
-            gamePlay++
+                if (rdmNum === 1) {
+                    bot = 'pierre'
+                    if (bot == playerSelect.value) {
+                        colmd_12.innerHTML = egal
+                    } else if (playerSelect.value == "feuille") {
+                        colmd_12.innerHTML = win
+                        moneyWin += (bet * 2)
+                        gameWin++
+                    } else if (playerSelect.value == "ciseaux") {
+                        colmd_12.innerHTML = loose
+                        moneyWin -= bet
+                    }
+                }
+                if (rdmNum === 2) {
+                    bot = 'feuille'
+                    if (bot == playerSelect.value) {
+                        colmd_12.innerHTML = egal
+                    } else if (playerSelect.value == "ciseaux") {
+                        colmd_12.innerHTML = win
+                        moneyWin += (bet * 2)
+                        gameWin++
+                    } else if (playerSelect.value == "pierre") {
+                        colmd_12.innerHTML = loose
+                        moneyWin -= bet
+                    }
+                }
+                if (rdmNum === 3) {
+                    bot = 'ciseaux'
+                    if (bot == playerSelect.value) {
+                        colmd_12.innerHTML = egal
+                    } else if (playerSelect.value == "pierre") {
+                        colmd_12.innerHTML = win
+                        moneyWin += (bet * 2)
+                        gameWin++
+                    } else if (playerSelect.value == "feuille") {
+                        colmd_12.innerHTML = loose
+                        moneyWin -= bet
+                    }
+                }
+                // Après avoir cliquer sur le boutton, attendre 2s puis faire le code suivant
+                setTimeout(function () {
+                    var winr = gameWin / gamePlay * 100
+                    inputMoney.setAttribute('value', `Argent : ${moneyWin}$`)
+                    inputWinrate.setAttribute('value', `Winrate : ${winr.toFixed(2)}%`)
 
-            if (rdmNum === 1) {
-                bot = 'pierre'
-                if (bot == playerSelect.value) {
-                    colmd_12.innerHTML = egal
-                } else if (playerSelect.value == "feuille") {
-                    colmd_12.innerHTML = win
-                    moneyWin += (bet * 2)
-                    gameWin++
-                } else if (playerSelect.value == "ciseaux") {
-                    colmd_12.innerHTML = loose
-                    moneyWin -= bet
-                }
+                    // Si l'argent de l'utilisateur est égal à 0 alors rechargement de la page
+                    if (moneyWin <= 0) {
+                        window.location.reload();
+                    }
+                    colmd_12.innerHTML = ''
+                    colmd_12_2.innerHTML = ''
+                    checke -= 1
+                }, 2000)
             }
-            if (rdmNum === 2) {
-                bot = 'feuille'
-                if (bot == playerSelect.value) {
-                    colmd_12.innerHTML = egal
-                } else if (playerSelect.value == "ciseaux") {
-                    colmd_12.innerHTML = win
-                    moneyWin += (bet * 2)
-                    gameWin++
-                } else if (playerSelect.value == "pierre") {
-                    colmd_12.innerHTML = loose
-                    moneyWin -= bet
-                }
-            }
-            if (rdmNum === 3) {
-                bot = 'ciseaux'
-                if (bot == playerSelect.value) {
-                    colmd_12.innerHTML = egal
-                } else if (playerSelect.value == "pierre") {
-                    colmd_12.innerHTML = win
-                    moneyWin += (bet * 2)
-                    gameWin++
-                } else if (playerSelect.value == "feuille") {
-                    colmd_12.innerHTML = loose
-                    moneyWin -= bet
-                }
-            }
-            // Après avoir cliquer sur le boutton, attendre 2s puis faire le code suivant
-            setTimeout(function () {
-                var winr = gameWin / gamePlay * 100
-                inputMoney.setAttribute('value', `Argent : ${moneyWin}$`)
-                inputWinrate.setAttribute('value', `Winrate : ${winr.toFixed(2)}%`)
-
-                // Si l'argent de l'utilisateur est égal à 0 alors rechargement de la page
-                if (moneyWin <= 0) {
-                    window.location.reload();
-                }
-                colmd_12.innerHTML = ''
-            }, 2000)
         }
     } else {
         // L'utilisateur n'a pas assez d'argent
