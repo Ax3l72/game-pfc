@@ -1,18 +1,20 @@
-// argent parié
-var bet = 0
-
-// argent total joueur
-var moneyWin = 10
-
+//// Variables 
 // Stats
 var gamePlay = 0
 var gameWin = 0
 var winrate = 0
 
+// Argent parié
+var bet = 0
 
+// Argent total joueur
+var moneyWin = 100 // Par défaut le joueur à 100$
 
+// Fonction d'auto création
 function build() {
-    // Création bootstrap
+    // Création bootstrap //
+
+    // Déclaration des const
     const doc = document.body
     const app = document.createElement('div')
     const container = document.createElement('div')
@@ -45,6 +47,7 @@ function build() {
     row.appendChild(colmd_12)
 
 
+    // Création Input, et Selecteur //
     // Déclaration des const
 
     const inputBet = document.createElement('input')
@@ -56,7 +59,7 @@ function build() {
     const inputMoney = document.createElement('input')
     const inputWinrate = document.createElement('input')
     const btn = document.createElement('button')
-    
+
     // Selecteur
 
     select.setAttribute('id', 'pfc')
@@ -104,18 +107,21 @@ function build() {
 
 }
 
+// Fonction a exécuter quand on clic sur le boutton
 function startGame() {
     const playerSelect = document.getElementById('pfc')
     const colmd_12 = document.getElementById('result')
     const inputBet = document.getElementById('bet')
     const inputMoney = document.getElementById('moneytotal')
     const inputWinrate = document.getElementById('winrate')
-    
+
 
     var rdmNum = randomNumber(1, 3);
     bet = inputBet.value
 
-    if(moneyWin >= bet){
+    // Si l'argent de l'user est plus grande que le montant alors faire la suite
+    if (moneyWin >= bet) {
+        // Si bet est égal a 0 alors retourner erreur
         if (bet <= 0) {
             colmd_12.innerHTML = 'Vous devez saisir un montant a parié !'
         } else {
@@ -124,15 +130,16 @@ function startGame() {
             let egal = 'Personne ne gagne dommage :('
             let win = 'Bien joué a toi tu gagne !'
             let loose = 'Quel dommage, tu perds :('
+            // Ajout d'une partie afin de faire le winrate
             gamePlay++
-            
+
             if (rdmNum === 1) {
                 bot = 'pierre'
                 if (bot == playerSelect.value) {
                     colmd_12.innerHTML = egal
                 } else if (playerSelect.value == "feuille") {
                     colmd_12.innerHTML = win
-                    moneyWin += (bet*2)
+                    moneyWin += (bet * 2)
                     gameWin++
                 } else if (playerSelect.value == "ciseaux") {
                     colmd_12.innerHTML = loose
@@ -145,7 +152,7 @@ function startGame() {
                     colmd_12.innerHTML = egal
                 } else if (playerSelect.value == "ciseaux") {
                     colmd_12.innerHTML = win
-                    moneyWin += (bet*2)
+                    moneyWin += (bet * 2)
                     gameWin++
                 } else if (playerSelect.value == "pierre") {
                     colmd_12.innerHTML = loose
@@ -158,32 +165,35 @@ function startGame() {
                     colmd_12.innerHTML = egal
                 } else if (playerSelect.value == "pierre") {
                     colmd_12.innerHTML = win
-                    moneyWin += (bet*2)
+                    moneyWin += (bet * 2)
                     gameWin++
                 } else if (playerSelect.value == "feuille") {
                     colmd_12.innerHTML = loose
                     moneyWin -= bet
                 }
             }
-            
+            // Après avoir cliquer sur le boutton, attendre 2s puis faire le code suivant
             setTimeout(function () {
                 var winr = gameWin / gamePlay * 100
                 inputMoney.setAttribute('value', `Argent : ${moneyWin}$`)
                 inputWinrate.setAttribute('value', `Winrate : ${winr.toFixed(2)}%`)
 
-                if(moneyWin <= 0){
+                // Si l'argent de l'utilisateur est égal à 0 alors rechargement de la page
+                if (moneyWin <= 0) {
                     window.location.reload();
                 }
                 colmd_12.innerHTML = ''
-            },2000)
+            }, 2000)
         }
-    }else{
+    } else {
+        // L'utilisateur n'a pas assez d'argent
         colmd_12.innerHTML = `Vous n'avez pas assez d'argent !`
     }
 }
-
+// Génération du nombre aléatoire entre 1 et 3 afin de savoir si c'est : Pierre, Feuille ou Ciseaux
 function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
 // // // // // // // // // // // // // // //
 build()
