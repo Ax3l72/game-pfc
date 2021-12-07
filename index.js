@@ -73,8 +73,8 @@ function build() {
     btn.setAttribute('type', 'submit')
     btn.setAttribute('onclick', 'startGame()')
     btn.innerText = 'Play'
-    // Input
 
+    // Input
     inputBet.setAttribute('type', 'number')
     inputBet.setAttribute('id', 'bet')
 
@@ -83,9 +83,9 @@ function build() {
     inputMoney.setAttribute('id', 'moneytotal')
     inputWinrate.setAttribute('id', 'winrate')
 
-    inputBet.setAttribute('value', '0')
     inputBet.setAttribute('mix', '1')
     inputBet.setAttribute('max', '10000')
+    inputBet.setAttribute('placeholder', 'Choisisez votre montant')
     inputMoney.setAttribute('value', `Argent : ${moneyWin}$`)
     inputWinrate.setAttribute('value', `Winrate : ${winrate.toFixed(2)}%`)
 
